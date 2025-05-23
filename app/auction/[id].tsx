@@ -29,8 +29,7 @@ export default function AuctionDetailScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Optional: Display a header with auction info above the WebView */}
-      <Stack.Screen options={{ title: auction?.title ? auction.title :  'Auction Item'  }} />
+      <Stack.Screen options={{ title: auction?.title ? auction.title :  'Auction Item', headerBackTitle: ''  }} />
 
       <WebView
         source={{ uri: auction?.auction_url ? auction.auction_url : ''  }}

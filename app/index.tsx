@@ -10,8 +10,16 @@ export default function AuctionsListScreen() {
 
   const router = useRouter();
   const { auctions, loading, error } = useAuctions();
+  const [starredAuctions, setStarredAuctions] = useState<{ [key: string]: boolean }>({});
 
   const handleAuctionPress = (auction: Auction) => router.push(`/auction/${auction.auction_id}`);
+
+  const handleStarPress = (auctionId: string) => {
+    setStarredAuctions((prev) => ({
+      ...prev,
+      [auctionId]: !prev[auctionId] || false,
+    }));
+  };
 
   const renderAuctionItem = ({ item }: { item: Auction }) => {
 
@@ -22,8 +30,8 @@ export default function AuctionsListScreen() {
         subtitle={`${item.subtitle} \nEnded ${item.auction_end}`}
         price={item.high_bid.toString()}
         onPress={() => handleAuctionPress(item)}
-        starred={true}
-        onStarPress={() => {/* handle star */ }} />
+        starred={starredAuctions[item.auction_id] || false} 
+        onStarPress={() => handleStarPress(item.auction_id)} />
     )
   };
 

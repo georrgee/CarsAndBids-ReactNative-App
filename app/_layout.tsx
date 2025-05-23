@@ -54,8 +54,8 @@ function RootLayoutNav() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false, title: 'Auctions' }} />
-        <Stack.Screen name="auction/[id]" options={{ headerShown: true, title: 'Auction Details' }} />
+        <Stack.Screen name="index" options={{ headerShown: false, title: '' }} />
+        <Stack.Screen name="auction/[id]" options={{ headerShown: true, headerTintColor: colorScheme === 'dark' ? 'white' : 'black' , headerBackTitle: '', }} />
       </Stack>
     </ThemeProvider>
   );

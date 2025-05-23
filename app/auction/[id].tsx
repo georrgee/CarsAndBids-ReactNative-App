@@ -1,53 +1,14 @@
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, ActivityIndicator } from 'react-native';
 import { useLocalSearchParams, Stack } from 'expo-router';
-import { useState, useEffect } from 'react';
 import { WebView } from 'react-native-webview';
+import { useSingleAuction } from '@/hooks/useSingleAuction';
 import { Text, View } from '@/components/Themed';
-
-// Mock function to get auction details - replace with your actual data fetching
-const getAuctionDetails = async (id: string) => {
-  // Simulate API call
-  return {
-    id,
-    title: `Auction #${id}`,
-    description: 'Detailed description of the auction item',
-    webUrl: `https://your-auction-site.com/auctions/${id}`,
-  };
-};
 
 export default function AuctionDetailScreen() {
 
   const { id } = useLocalSearchParams<{ id: string }>();
-  const [loading, setLoading] = useState(true);
-  const [auctionDetails, setAuctionDetails] = useState<{
-    title: string;
-    webUrl: string;
-  } | null>(null);
-
-  useEffect(() => {
-    const loadAuctionDetails = async () => {
-      if (id) {
-        try {
-          const details = await getAuctionDetails(id);
-          setAuctionDetails(details);
-        } catch (error) {
-          console.error('Error loading auction details:', error);
-        } finally {
-          setLoading(false);
-        }
-      }
-    };
-
-    loadAuctionDetails();
-  }, [id]);
-
-  // Update the header title with the auction title
-  useEffect(() => {
-    if (auctionDetails?.title) {
-      // This will update the header title dynamically
-      // You can also use Stack.Screen options if needed
-    }
-  }, [auctionDetails]);
+  const { auction, loading, error } = useSingleAuction(id);
 
   if (loading) {
     return (
@@ -58,7 +19,7 @@ export default function AuctionDetailScreen() {
     );
   }
 
-  if (!auctionDetails) {
+  if (error) {
     return (
       <View style={styles.errorContainer}>
         <Text style={styles.errorText}>Auction not found</Text>
@@ -69,17 +30,16 @@ export default function AuctionDetailScreen() {
   return (
     <View style={styles.container}>
       {/* Optional: Display a header with auction info above the WebView */}
-      <Stack.Screen options={{ title: auctionDetails.title }} />
+      <Stack.Screen options={{ title: auction?.title ? auction.title :  'Auction Item'  }} />
 
       <WebView
-        source={{ uri: auctionDetails.webUrl }}
+        source={{ uri: auction?.auction_url ? auction.auction_url : ''  }}
         style={styles.webview}
-        onLoadStart={() => setLoading(true)}
-        onLoad={() => setLoading(false)}
+        //onLoadStart={() => loading}
+        //onLoad={() => loading}
         onError={(syntheticEvent) => {
           const { nativeEvent } = syntheticEvent;
           console.error('WebView error:', nativeEvent);
-          setLoading(false);
         }} />
 
       {loading && (

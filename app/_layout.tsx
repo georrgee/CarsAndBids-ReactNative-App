@@ -14,7 +14,6 @@ export {
 } from 'expo-router';
 
 export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
   initialRouteName: 'index',
 };
 
@@ -25,6 +24,8 @@ export default function RootLayout() {
 
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    RubikRegular: require('../assets/fonts/Rubik-Regular.ttf'),
+    RubikMedium: require('../assets/fonts/Rubik-Medium.ttf'),
     ...FontAwesome.font,
   });
 

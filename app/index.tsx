@@ -10,7 +10,7 @@ export default function AuctionsListScreen() {
   const router = useRouter();
   const { auctions, loading, error } = useAuctions();
 
-  const handleAuctionPress = (auction: Auction) => router.push(`/auction/${auction.id}`);
+  const handleAuctionPress = (auction: Auction) => router.push(`/auction/${auction.auction_id}`);
 
   const renderAuctionItem = ({ item }: { item: Auction }) => (
     <Pressable

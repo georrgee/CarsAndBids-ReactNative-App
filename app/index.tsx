@@ -2,55 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, ActivityIndicator, Pressable, FlatList } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { useRouter } from 'expo-router';
-
-const mockAuctions = [
-  { id: '1', title: 'Vintage Watch Collection', endTime: '2023-12-31', currentBid: '$1,200' },
-  { id: '2', title: 'Rare Comic Books', endTime: '2023-12-25', currentBid: '$850' },
-  { id: '3', title: 'Antique Furniture Set', endTime: '2024-01-05', currentBid: '$3,500' },
-  { id: '4', title: 'Sports Memorabilia', endTime: '2023-12-28', currentBid: '$750' },
-  { id: '5', title: 'Art Deco Jewelry', endTime: '2024-01-10', currentBid: '$2,100' },
-];
-type Auction = {
-  id: string;
-  title: string;
-  endTime: string;
-  currentBid: string;
-  // Add other properties as needed
-};
+import { Auction } from '@/models';
+import { useAuctions } from '@/hooks';
 
 export default function AuctionsListScreen() {
 
   const router = useRouter();
-  const [auctions, setAuctions] = useState<Auction[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { auctions, loading, error } = useAuctions();
 
-  useEffect(() => {
-
-    const fetchAuctions = async () => {
-
-      try {
-
-        // Replace this with your actual API call
-        // const response = await fetch('your-api-endpoint');
-        // const data = await response.json();
-        // setAuctions(data);
-
-        // Using mock data for now
-        setTimeout(() => {
-          setAuctions(mockAuctions);
-          setLoading(false);
-        }, 1000);
-
-      } catch (error) {
-        console.error('Error fetching auctions:', error);
-        setLoading(false);
-      }
-    };
-
-    fetchAuctions();
-  }, []);
-
-  
   const handleAuctionPress = (auction: Auction) => router.push(`/auction/${auction.id}`);
 
   const renderAuctionItem = ({ item }: { item: Auction }) => (
@@ -59,8 +18,8 @@ export default function AuctionsListScreen() {
       onPress={() => handleAuctionPress(item)}>
       <Text style={styles.auctionTitle}>{item.title}</Text>
       <View style={styles.auctionDetails}>
-        <Text>Ends: {item.endTime}</Text>
-        <Text style={styles.bidAmount}>Current Bid: {item.currentBid}</Text>
+        <Text>Ends: {item.auction_end}</Text>
+        <Text style={styles.bidAmount}>Current Bid: {item.high_bid}</Text>
       </View>
     </Pressable>
   );
@@ -79,10 +38,9 @@ export default function AuctionsListScreen() {
       <FlatList
         data={auctions}
         renderItem={renderAuctionItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.auction_id}
         contentContainerStyle={styles.listContent}
-        showsVerticalScrollIndicator={false}
-      />
+        showsVerticalScrollIndicator={false} />
     </View>
   );
 }
